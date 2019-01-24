@@ -1,0 +1,28 @@
+{
+  "name": "restful_api",
+  "version": "1.0.0",
+  "description": "A restful API, school project",
+  "main": "index.js",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "author": "Carl Ejnarsson",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^4.1.0",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.4",
+    "mongoose-timestamp": "^0.6.0",
+    "restify": "^7.5.0",
+    "restify-errors": "^6.1.1",
+    "restify-jwt-community": "^1.0.9"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
