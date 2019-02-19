@@ -1,38 +1,38 @@
 const errors = require('restify-errors')
 const rjwt = require('restify-jwt-community')
-const Customer = require('../models/Customer')
+const Fisher = require('../models/Fish')
 const config = require('../config')
 
 module.exports = server => {
-  // GET CUSTOMERS
-  server.get('/customers', async (req, res, next) => {
+  // GET FISH
+  server.get('/fishes', async (req, res, next) => {
     try {
-      const customers = await Customer.find({})
-      res.send(customers)
+      const fishes = await Fisher.find({})
+      res.send(fishes)
       next()
     } catch (err) {
       return next(new errors.InvalidContentError(err))
     }
   })
 
-  // GET SINGLE CUSTOMER
-  server.get('/customers/:id', async (req, res, next) => {
+  // GET SINGLE FISH
+  server.get('/fishes/:id', async (req, res, next) => {
     try {
-      const customer = await Customer.findById(req.params.id)
-      res.send(customer)
+      const fish = await Fisher.findById(req.params.id)
+      res.send(fish)
       next()
     } catch (err) {
       return next(
         new errors.ResourceNotFoundError(
-          `THere is no customer with id of ${req.params.id}`
+          `THere is no fish with id of ${req.params.id}`
         )
       )
     }
   })
 
-  // ADD CUSTOMERS
+  // ADD FISH
   server.post(
-    '/customers',
+    '/fishes',
     rjwt({ secret: config.JWT_SECRET }),
     async (req, res, next) => {
       // check for JSON
@@ -42,16 +42,24 @@ module.exports = server => {
         )
       }
 
-      const { name, email, balance } = req.body
+      const { longitude, latitude, specie, weight, length, imageURL } = req.body
+      const fisherman = req.user.email
 
-      const customer = new Customer({
-        name,
-        email,
-        balance
+      const fish = new Fisher({
+        fisherman,
+        longitude,
+        latitude,
+        specie,
+        weight,
+        length,
+        imageURL
       })
 
       try {
-        const newCustomer = await customer.save()
+        const newFish = await fish.save()
+
+        console.log(newFish)
+
         res.send(201)
         next()
       } catch (err) {
@@ -60,9 +68,9 @@ module.exports = server => {
     }
   )
 
-  // UPDATE CUSTOMER
+  // UPDATE Fisher
   server.put(
-    '/customers/:id',
+    '/fishes/:id',
     rjwt({ secret: config.JWT_SECRET }),
     async (req, res, next) => {
       // check for JSON
@@ -73,7 +81,7 @@ module.exports = server => {
       }
 
       try {
-        const customer = await Customer.findOneAndUpdate(
+        const fish = await Fisher.findOneAndUpdate(
           { _id: req.params.id },
           req.body
         )
@@ -82,26 +90,26 @@ module.exports = server => {
       } catch (err) {
         return next(
           new errors.ResourceNotFoundError(
-            `There is no customer with id of ${req.params.id}`
+            `There is no fish with id of ${req.params.id}`
           )
         )
       }
     }
   )
 
-  // DELETE CUSTOMER
+  // DELETE Fisher
   server.del(
-    '/customers/:id',
+    '/fishes/:id',
     rjwt({ secret: config.JWT_SECRET }),
     async (req, res, next) => {
       try {
-        const customer = await Customer.findOneAndRemove({ _id: req.params.id })
+        const fish = await Fisher.findOneAndRemove({ _id: req.params.id })
         res.send(204)
         next()
       } catch (err) {
         return next(
           new errors.ResourceNotFoundError(
-            `There is no customer with id of ${req.params.id}`
+            `There is no fish with id of ${req.params.id}`
           )
         )
       }

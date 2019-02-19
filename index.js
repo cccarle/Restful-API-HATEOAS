@@ -26,7 +26,7 @@ db.on('error', err => console.log(err))
 
 // once open
 db.once('open', () => {
-  require('./routes/customer')(server)
+  require('./routes/fishes')(server)
   require('./routes/users')(server)
   console.log(`Server started on port ${config.PORT}`)
 })

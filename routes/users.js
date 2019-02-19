@@ -7,7 +7,6 @@ const config = require('../config')
 
 module.exports = server => {
   // REGISTER USER
-
   server.post('/register', (req, res, next) => {
     const { email, password, password2 } = req.body
 
@@ -45,7 +44,7 @@ module.exports = server => {
 
       const { iat, exp } = jwt.decode(token)
       // res with token
-      res.send({ iat, exp, token })
+      res.send({ iat, exp, token, user })
 
       next()
     } catch (err) {
